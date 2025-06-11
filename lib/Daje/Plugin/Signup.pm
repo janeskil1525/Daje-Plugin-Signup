@@ -31,6 +31,12 @@ our $VERSION = "0.01";
 
 sub register ($self, $app, $config) {
 
+    my $r = $app->routes();
+    $r->put('/api/login/')->to('Signup#signup');
+
+    $app->helper(login => sub {state $login = Daje::Helper::Login->new(pg => $app->pg)});
+
+
     $app->log->debug("Daje::Plugin::Signup::register start");
 
 }
