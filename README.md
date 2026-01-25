@@ -1,4 +1,4 @@
-[![Actions Status](https://github.com/janeskil1525/Daje-Plugin-Signup/actions/workflows/test.yml/badge.svg)](https://github.com/janeskil1525/Daje-Plugin-Signup/actions)
+[![Actions Status](https://github.com/janeskil1525/Daje-Plugin-Signup/actions/workflows/test.yml/badge.svg?branch=master)](https://github.com/janeskil1525/Daje-Plugin-Signup/actions?workflow=test)
 # NAME
 
 Daje::Plugin::Signup

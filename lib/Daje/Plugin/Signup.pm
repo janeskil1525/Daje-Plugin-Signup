@@ -2,7 +2,7 @@ package Daje::Plugin::Signup;
 use Mojo::Base 'Mojolicious::Plugin', -signatures;
 use v5.40;
 
-our $VERSION = "0.02";
+our $VERSION = "0.10";
 
 #
 # NAME
@@ -35,13 +35,14 @@ our $VERSION = "0.02";
 
 sub register ($self, $app, $config) {
 
-    my $r = $app->routes();
-    $r->put('/api/login/')->to('Signup#signup');
-
-    $app->helper(login => sub {state $login = Daje::Helper::Login->new(pg => $app->pg)});
-
-
     $app->log->debug("Daje::Plugin::Signup::register start");
+
+    my $r = $app->routes();
+    $r->put($app->config->{project} . '/api/new/client/signup')->to('Signup#signup');
+
+
+
+    $app->log->debug("Daje::Plugin::Signup::register end");
 
 }
 

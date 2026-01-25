@@ -1,0 +1,65 @@
+package Daje::Workflow::Activities::Signup::User;
+use Mojo::Base 'Daje::Workflow::Common::Activity::Base', -base, -signatures;
+use v5.42;
+
+# NAME
+# ====
+#
+# Daje::Workflow::Activity::Signup::User - It signs up a new client
+#
+# SYNOPSIS
+# ========
+#
+#     use Daje::Workflow::Activity::Signup::User
+#
+# DESCRIPTION
+# ===========
+#
+# Daje::Workflow::Activity::Signup::User is a module that generates perl code
+#
+# LICENSE
+# =======
+#
+# Copyright (C) janeskil1525.
+#
+# This library is free software; you can redistribute it and/or modify
+# it under the same terms as Perl itself.
+#
+# AUTHOR
+# ======
+#
+# janeskil1525 E<lt>janeskil1525@gmail.comE<gt>
+#
+
+use Data::Dumper;
+use Digest::SHA qw{sha512_base64};
+use Daje::Database::Model::UsersUsers;
+
+sub signup($self) {
+
+    $self->model->insert_history(
+        "New client",
+        "Daje::Workflow::Activities::Signup::User::signup",
+        1
+    );
+
+    say "Daje::Workflow::Activities::Signup::User::signup";
+    my $data = $self->context->{context}->{payload};
+    $data->{password} = sha512_base64($data->{password});
+    try {
+        my $dbclass = Daje::Database::Model::UsersUsers->new(db => $self->db);
+        $self->model->insert_history(
+            "New client " . $dbclass->table_name() . Dumper($data), " insert", 2
+        );
+        $data->{$dbclass->workflow()} = $self->context->{context}->{workflow}->{workflow_fkey}
+            if($dbclass->workflow());
+
+        my $pkey = $dbclass->insert($data);
+        $self->context->{context}->{payload}->{$dbclass->table_name()} = $pkey;
+
+    } catch ($e) {
+        $self->error->add_error($e);
+    };
+}
+
+1;

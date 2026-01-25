@@ -1,6 +1,6 @@
 package Daje::Controller::Client::Signup;
 use Mojo::Base 'Mojolicious::Controller', -signatures;
-use v5.40;
+use v5.42;
 
 # NAME
 # ====
@@ -39,24 +39,20 @@ our $VERSION = "0.05";
 sub signup($self) {
 
     $self->app->log->debug('Daje::Controller::Client::Signup::signup '  . Dumper($self->req->body));
+    my $data->{context} = decode_json $self->req->body;
 
-    my $data->{context} = decode_json ($self->req->body);
-    #
-    # push @{$data->{actions}}, "$self->stash('wf_action')";
-    # $data->{workflow}->{workflow} = $self->stash('workflow');
-    # $data->{workflow}->{workflow_relation} = $self->stash('workflow_relation');
-    # $data->{workflow}->{workflow_relation_key} = $self->stash('workflow_relation_key');
-    # $data->{workflow}->{workflow_origin_key} = $self->stash('workflow_origin_key');
-    #
-    # say Dumper ($data);
     try {
         $self->workflow_engine->workflow_pkey(0);
         $self->workflow_engine->workflow_name('users_users');
         $self->workflow_engine->context($data);
-        $self->workflow_engine->process('save_users_user');
+        say "3";
+        $self->workflow_engine->process('register_new_users_user');
+        say "2";
         if($self->workflow_engine->error->has_error() == 0) {
+            say "3";
             $self->render(json => {result => 1, data => 'OK'});
         } else {
+            say "4";
             $self->app->log->error('Daje::Controller::Client::Signup::signup ' . $self->workflow_engine->error->error());
             $self->render(json =>
                 {result => 0, data => $self->workflow_engine->error->error()}
