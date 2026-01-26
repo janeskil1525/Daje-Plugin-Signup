@@ -39,7 +39,7 @@ sub register ($self, $app, $config) {
 
     my $r = $app->routes();
     $r->put($app->config->{project} . '/api/new/client/signup')->to('Signup#signup');
-
+    $r->put($app->config->{project} . '/api/new/client/verify')->to('Signup#verify');
 
 
     $app->log->debug("Daje::Plugin::Signup::register end");
